@@ -16,6 +16,8 @@ for a_link in proj_links:
     proj_soup = BeautifulSoup(proj_html, "html.parser")
     head_soup = proj_soup.find("h1", class_="hero__heading")
     head = head_soup.get_text()
+    if ";" in head:
+        head = head.replace(";", "")
     desc_soup = proj_soup.find("h2", class_="hero__text")
     desc = desc_soup.get_text()
     data = head + " (" + desc + ")\n"
