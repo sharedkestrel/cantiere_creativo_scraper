@@ -12,7 +12,8 @@ or using
 
     pip install -r requirements.txt
 
-Click [here](https://www.python.org/ftp/python/3.6.0/python-3.6.0.exe) to download Python 3.6. pip is already bundled with the Python package since 2.7.9+ or 3.4+, so there's no need to install it. Still, to make sure you have the last version, you can run
+Click [here](https://www.python.org/ftp/python/3.6.0/python-3.6.0.exe) to download Python 3.6.
+pip is already bundled with the Python package since 2.7.9+ or 3.4+, so there's no need to install it. Still, to make sure you have the last version, you can run
 
     pip install -U pip
     
