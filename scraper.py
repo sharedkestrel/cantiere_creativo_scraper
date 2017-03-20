@@ -1,12 +1,28 @@
 import requests
 from bs4 import BeautifulSoup
 
-# sets the url to open, then opens it
+
+def soupify(site):
+    attempts = 0
+    #give five attempts to connect to the site, else raise an exception
+    while attempts < 5:
+        #tries to open the given url, then prepares the HTML to get parsed
+        try:
+            print("Connecting to %s..." % site)
+            page = requests.get(site, timeout=30)
+            html = page.text
+            soup = BeautifulSoup(html, "html.parser")
+            return soup
+        except TimeoutError:
+            print("Connection failed, trying again...")
+            attempts += 1
+        except ConnectionError:
+            print("Connection failed, trying again...")
+            attempts += 1
+    raise ConnectionError("Connection failed")
+
 url = "https://www.cantierecreativo.net/portfolio/"
-portfolio = requests.get(url)
-#turns the returned object into text so that BeautifulSoup can process it
-html = portfolio.text
-soup = BeautifulSoup(html, "html.parser")
+soup = soupify(url)
 # finds every <a> tag with the works-list__item__link class, since they contain the "href"s to the projects
 proj_links = soup.find_all("a", class_="works-list__item__link")
 # creates the csv file and writes the first line
@@ -17,9 +33,7 @@ for a_link in proj_links:
     link = a_link.get('href')
     # creates a full link since the site contains local links
     full_link = "https://www.cantierecreativo.net" + link
-    proj_page = requests.get(full_link)
-    proj_html = proj_page.text
-    proj_soup = BeautifulSoup(proj_html, "html.parser")
+    proj_soup = soupify(full_link)
     # finds the tag containing the project name and strips out the HTML
     head_soup = proj_soup.find("h1", class_="hero__heading")
     head = head_soup.get_text()
@@ -30,5 +44,7 @@ for a_link in proj_links:
     desc = desc_soup.get_text()
     # joins the two found strings and adds them to a new line in the csv file
     data = "\n" + head + " (" + desc + ")"
+    print("Writing data to csv...")
     p.write(data)
 p.close()
+print("Process complete!")
