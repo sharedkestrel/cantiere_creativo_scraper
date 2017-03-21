@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import os.path
 
 
 def soupify(site):
@@ -21,12 +22,14 @@ def soupify(site):
             attempts += 1
     raise ConnectionError("Connection failed")
 
+#let the user input the file path
+path = input("Insert the path for the csv file: (if none is inserted, the working directory will be used)")
 url = "https://www.cantierecreativo.net/portfolio/"
 soup = soupify(url)
 # finds every <a> tag with the works-list__item__link class, since they contain the "href"s to the projects
 proj_links = soup.find_all("a", class_="works-list__item__link")
 # creates the csv file and writes the first line
-p = open('projects.csv', 'w')
+p = open(os.path.join(path, 'projects.csv'), 'w')
 p.write("Commissioner (Description)")
 # for every matching <a> tag, extracts the links and then parses each page
 for a_link in proj_links:
@@ -43,7 +46,7 @@ for a_link in proj_links:
     desc_soup = proj_soup.find("h2", class_="hero__text")
     desc = desc_soup.get_text()
     # joins the two found strings and adds them to a new line in the csv file
-    data = "\n" + head + " (" + desc + ")"
+    data = "\n %s (%s)" % (head, desc)
     print("Writing data to csv...")
     p.write(data)
 p.close()
