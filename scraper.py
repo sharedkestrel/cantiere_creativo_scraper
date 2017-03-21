@@ -23,12 +23,14 @@ def soupify(site):
     raise ConnectionError("Connection failed")
 
 #let the user input the file path
-path = input("Insert the path for the csv file: (if none is inserted, the working directory will be used)")
+path = input("Insert the path for the csv file: (if none is inserted, the working directory will be used)\n")
 # creates the csv file and writes the first line
 try:
     p = open(os.path.join(path, 'projects.csv'), 'w')
 except FileNotFoundError:
-    print("The %s folder does not exist." % path)
+    raise FileNotFoundError("The %s folder does not exist." % path)
+except PermissionError:
+    raise PermissionError("The script doesn't have permission to write in %s" % path)
 p.write("Commissioner (Description)")
 url = "https://www.cantierecreativo.net/portfolio/"
 soup = soupify(url)
@@ -50,7 +52,7 @@ for a_link in proj_links:
     desc = desc_soup.get_text()
     # joins the two found strings and adds them to a new line in the csv file
     data = "\n %s (%s)" % (head, desc)
-    print("Writing data to csv...")
+    print("Writing data to csv...\n")
     p.write(data)
 p.close()
 print("Process complete!")
