@@ -24,13 +24,16 @@ def soupify(site):
 
 #let the user input the file path
 path = input("Insert the path for the csv file: (if none is inserted, the working directory will be used)")
+# creates the csv file and writes the first line
+try:
+    p = open(os.path.join(path, 'projects.csv'), 'w')
+except FileNotFoundError:
+    print("The %s folder does not exist." % path)
+p.write("Commissioner (Description)")
 url = "https://www.cantierecreativo.net/portfolio/"
 soup = soupify(url)
 # finds every <a> tag with the works-list__item__link class, since they contain the "href"s to the projects
 proj_links = soup.find_all("a", class_="works-list__item__link")
-# creates the csv file and writes the first line
-p = open(os.path.join(path, 'projects.csv'), 'w')
-p.write("Commissioner (Description)")
 # for every matching <a> tag, extracts the links and then parses each page
 for a_link in proj_links:
     link = a_link.get('href')
