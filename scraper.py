@@ -5,9 +5,9 @@ import os.path
 
 def soupify(site):
     attempts = 0
-    #give five attempts to connect to the site, else raise an exception
+    # give five attempts to connect to the site, else raise an exception
     while attempts < 5:
-        #tries to open the given url, then prepares the HTML to get parsed
+        # tries to open the given url, then prepares the HTML to get parsed
         try:
             print("Connecting to %s..." % site)
             page = requests.get(site, timeout=30)
@@ -22,7 +22,7 @@ def soupify(site):
             attempts += 1
     raise ConnectionError("Connection failed")
 
-#let the user input the file path
+# let the user input the file path
 path = input("Insert the path for the csv file: (if none is inserted, the working directory will be used)\n")
 # creates the csv file and writes the first line
 try:
