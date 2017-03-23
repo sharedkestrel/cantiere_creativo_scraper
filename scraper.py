@@ -12,8 +12,8 @@ def soupify(site):
             print("Connecting to %s..." % site)
             page = requests.get(site, timeout=30)
             html = page.text
-            soup = BeautifulSoup(html, "html.parser")
-            return soup
+            fsoup = BeautifulSoup(html, "html.parser")
+            return fsoup
         except TimeoutError:
             print("Connection failed, trying again...")
             attempts += 1
